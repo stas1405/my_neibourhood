@@ -16,4 +16,5 @@ If a user wants to return application to a default state, few actions are requir
 2. Clear the search field and to press search button.
 
 Few words from develepoer:
-There is a wide gap to improve functionality and style of provided application)    
+There is a wide gap to improve functionality and style of provided application) 
+For example: to add a field where the user can set up the neihbourhood by clicking on a point on a map.
