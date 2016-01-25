@@ -10,12 +10,12 @@
 		</div>
 		<input placeholder="type keyword…" class="search-bar" data-bind="value: searchword, valueUpdate: 'keyup'" autocomplete="off">
 		</input>
-			<div class="locations">
-				<h4 class="listTitle">Favorite Locations
-				</h4>
+			<div class="locations" >
+				<div id="listTitle" data-bind="click: listToggle">Favorite Locations
+				</div>
 				<p id="emptyList" data-bind="visible: searchedList().length == 0">No Results Found
 				</p>
-				<ul class="resultList" data-bind="foreach: searchedList" >
+				<ul class="resultList" data-bind="foreach: searchedList, visible: listBoolean">
 					<li data-bind="event: { click: $root.updateList }">
 						<p id="locationName" data-bind="text: venue.name">
 						</p>

@@ -11,11 +11,18 @@ function MapViewModel() {
   var map; // declares a global map variable
   var infowindow;
   var venueMarkers = [];
+  self.listBoolean = ko.observable(true);
   self.searchword = ko.observable(''); //variable for user input
   self.locationsList = ko.observableArray([]); //list of locations from Foursquare API
   self.searchedList = ko.observableArray(self.locationsList()); //List of locations for search 
 
-
+  self.listToggle = function() {
+    if (self.listBoolean() === true) {
+      self.listBoolean(false);
+    } else {
+      self.listBoolean(true);
+    }
+  };
   //Update list of location with button click, based on search criteria
   self.displayList = ko.computed(function() {
     var venue;
@@ -73,7 +80,7 @@ function MapViewModel() {
     var mapOptions = {
       zoom: 20,
       scrollwheel: true,
-      disableDefaultUI: true
+      disableDefaultUI: false
     };
     var googleMap = '<div id="map"></div>';
 
