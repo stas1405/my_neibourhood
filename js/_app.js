@@ -1,3 +1,4 @@
+'use strict';
 var MarkerModel = function(marker, name, contact, position) {
   this.marker = marker;
   this.name = name;
@@ -16,13 +17,13 @@ function MapViewModel() {
 
 
   //Update list of location with button click, based on search criteria
-  self.displayList = function() {
+  self.displayList = ko.computed(function() {
     var venue;
     var list = [];
     var searchword = self.searchword().toLowerCase();
 
     if (searchword !== "") {
-      for (var i in self.locationsList()) {
+      for (var i = 0; i < self.locationsList().length; i++) {
         venue = self.locationsList()[i].venue;
         if (venue.name.toLowerCase().indexOf(searchword) != -1) {
           list.push(self.locationsList()[i]);
@@ -33,18 +34,18 @@ function MapViewModel() {
       self.searchedList(self.locationsList());
       filteringMarkersBy(searchword);
     }
-  };
+  });
 
   self.updateList = function(data) {
     var venueName = data.venue.name.toLowerCase();
-    for (var i in venueMarkers) {
+    for (var i = 0; i < venueMarkers.length; i++) {
       if (venueMarkers[i].name === venueName) {
         google.maps.event.trigger(venueMarkers[i].marker, 'click');
         map.panTo(venueMarkers[i].position);
       }
     }
-    self.searchedList(data);
-    filteringMarkersBy(venueName);
+    //self.searchedList(data);
+    //filteringMarkersBy(venueName);
   };
 
   // update map markers based on search keyword
@@ -54,7 +55,7 @@ function MapViewModel() {
 
   // filtering method for map markers
   function filteringMarkersBy(keyword) {
-    for (var i in venueMarkers) {
+    for (var i = 0; i < venueMarkers.length; i++) {
       if (venueMarkers[i].marker.map === null) {
         venueMarkers[i].marker.setMap(map);
       }
@@ -69,7 +70,6 @@ function MapViewModel() {
   */
   function initializeMap() {
 
-    var locations;
     var mapOptions = {
       zoom: 20,
       scrollwheel: true,
@@ -88,17 +88,15 @@ function MapViewModel() {
     $.getJSON(foursquareBaseUrl, function(data) {
       self.locationsList(data.response.groups[0].items);
       self.searchedList(self.locationsList());
-      for (var l in self.locationsList()) {
+      for (var l = 0; l < self.locationsList().length; l++) {
         createMarkers(self.locationsList()[l]);
       }
-    }).fail(function(jqXHR, status, error){
-      console.log(status)
-    if(status == 'error'){
-        alert("Forsquare API is not reachable. Try to refresр this page later")
-    } else {
-        //some other error
-    }
-});
+    }).fail(function(jqXHR, status, error) {
+      console.log(status);
+      if (status == 'error') {
+        alert("Forsquare API is not reachable. Try to refresр this page later");
+      }
+    });
 
     // Sets the boundaries of the map based on pin locations
     window.mapBounds = new google.maps.LatLngBounds();
@@ -133,10 +131,23 @@ function MapViewModel() {
       map: map,
       position: position,
       title: name,
+      animation: google.maps.Animation.DROP,
       icon: icon
     });
+    marker.addListener('click', toggleBounce);
 
+    function toggleBounce() {
+      if (marker.getAnimation() !== null) {
+        marker.setAnimation(null);
+      } else {
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+        setTimeout(function() {
+          marker.setAnimation(null);
+        }, 750);
+      }
+    }
     venueMarkers.push(new MarkerModel(marker, name.toLowerCase(), contact, position));
+    console.log(venueMarkers);
     bounds.extend(new google.maps.LatLng(lat, lng));
     map.fitBounds(bounds);
     map.setCenter(bounds.getCenter());
@@ -153,7 +164,7 @@ function MapViewModel() {
     });
     google.maps.event.addListener(infowindow, 'closeclick', function() {
       self.displayList(); //close the infowindow and refresh the locations list
-
+      marker.setAnimation(null);
     });
   }
 

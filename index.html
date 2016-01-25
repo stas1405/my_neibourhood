@@ -1,31 +1,36 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-  <title>Neighborhood Map: Vancouver</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
-  <link rel="stylesheet" type="text/css" href="css/style.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script> 
-  <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places"></script>
-</head>
+	<head>
+		<title>Neighborhood Map: Vancouver</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="css/style.css">
+	</head>
 	<body>
-		<div id="map"></div>
-		<input class="search-bar" data-bind="value: searchword"><button class="search-button" data-bind = "click: displayList">Search</button></input>
-		
-			<div class="locations"><h4 class="listTitle">Favorite Locations</h4>
-			<p id="emptyList" data-bind="visible: searchedList().length == 0">No Results Found</p>
+		<div id="map">
+		</div>
+		<input placeholder="type keyword…" class="search-bar" data-bind="value: searchword, valueUpdate: 'keyup'" autocomplete="off">
+		</input>
+			<div class="locations">
+				<h4 class="listTitle">Favorite Locations
+				</h4>
+				<p id="emptyList" data-bind="visible: searchedList().length == 0">No Results Found
+				</p>
 				<ul class="resultList" data-bind="foreach: searchedList" >
-
-				<li data-bind = "event: { click: $root.updateList }">
-					<p id="locationName" data-bind="text: venue.name"></p>
-					<p id="locationAddress" data-bind="text: venue.location.address"></p>
-					<p id="locationDescription" data-bind="text: tips[0].text"></p>
-				</li>
-				<hr />
+					<li data-bind="event: { click: $root.updateList }">
+						<p id="locationName" data-bind="text: venue.name">
+						</p>
+						<p id="locationAddress" data-bind="text: venue.location.address">
+						</p>
+						<p id="locationDescription" data-bind="text: tips[0].text">
+						</p>
+					</li>
+						<hr />
 				</ul>
 			</div>
-		<script type="text/javascript" src="js/knockout-3.4.0.js"></script>
-		<script type="text/javascript" src="js/app.js"></script>
+				<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script> 
+				<script src='http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js'></script>
+				<script async  src="http://maps.googleapis.com/maps/api/js?libraries=places"></script>
+				<script src="js/knockout-3.4.0.js"></script>
+				<script src="js/_app.js"></script>
 	</body>
 </html>

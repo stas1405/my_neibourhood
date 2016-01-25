@@ -4,6 +4,7 @@ This is a project 5 in Udacity for Front End Web Developer nanodegree course.
 This is a single-page application featuring a map of restaurants and bistro bars in Vancouver, BC Canada. 
 Application works with Foursquare and Google Map API.
 
+To load application user should double click on index.html file.
 When the application is loaded, user can see the list of popular places in Vancouver area in a table, called "Favorite Loations".
 On a map there are makeers, that represent each of location from the list.
 
