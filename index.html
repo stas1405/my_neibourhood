@@ -5,14 +5,15 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="css/style.css">
 	</head>
-	<body>
+	<body>	
 		<div id="map">
 		</div>
 		<input placeholder="type keyword…" class="search-bar" data-bind="value: searchword, valueUpdate: 'keyup'" autocomplete="off">
-		</input>
-			<div class="locations" >
-				<div id="listTitle" data-bind="click: listToggle">Favorite Locations
+				</input>
+			<div class="locations" data-bind="click: listToggle" >
+				<div id="listTitle">Favorite Locations
 				</div>
+				
 				<p id="emptyList" data-bind="visible: searchedList().length == 0">No Results Found
 				</p>
 				<ul class="resultList" data-bind="foreach: searchedList, visible: listBoolean">
@@ -27,10 +28,10 @@
 						<hr />
 				</ul>
 			</div>
-				<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script> 
-				<script src='http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js'></script>
-				<script async  src="http://maps.googleapis.com/maps/api/js?libraries=places"></script>
-				<script src="js/knockout-3.4.0.js"></script>
-				<script src="js/_app.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script> 
+<script src='http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js'></script>
+<script async  src="http://maps.googleapis.com/maps/api/js?libraries=places" onerror="handleError()"></script>
+<script src="js/knockout-3.4.0.js"></script>
+<script src="js/_app.js"></script>
 	</body>
 </html>

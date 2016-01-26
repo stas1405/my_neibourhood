@@ -186,3 +186,7 @@ function MapViewModel() {
 $(function() {
   ko.applyBindings(new MapViewModel());
 });
+
+ function handleError(){
+    alert("There is a problem loading Google Maps API. Check your reference.");
+  }
