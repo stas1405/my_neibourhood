@@ -1,12 +1,13 @@
 'use strict';
+
+
+
 var MarkerModel = function(marker, name, contact, position) {
   this.marker = marker;
   this.name = name;
   this.contact = contact;
   this.position = position;
 };
-
-  
 
 function MapViewModel() {
   var self = this;
@@ -27,18 +28,18 @@ function MapViewModel() {
     }
   };
 
-    $.getJSON(foursquareBaseUrl, function(data) {
-      self.locationsList(data.response.groups[0].items);
-      self.searchedList(self.locationsList());
-      for (var l = 0; l < self.locationsList().length; l++) {
-        createMarkers(self.locationsList()[l]);
-      }
-    }).fail(function(jqXHR, status, error) {
-      console.log(status);
-      if (status == 'error') {
-        alert("Forsquare API is not reachable. Try to refresр this page later");
-      }
-    });
+  $.getJSON(foursquareBaseUrl, function(data) {
+    self.locationsList(data.response.groups[0].items);
+    self.searchedList(self.locationsList());
+    for (var l = 0; l < self.locationsList().length; l++) {
+      createMarkers(self.locationsList()[l]);
+    }
+  }).fail(function(jqXHR, status, error) {
+    console.log(status);
+    if (status == 'error') {
+      alert("Forsquare API is not reachable. Try to refresh this page later");
+    }
+  });
 
   //Update list of location with button click, based on search criteria
   self.displayList = ko.computed(function() {
@@ -65,7 +66,7 @@ function MapViewModel() {
     for (var i = 0; i < venueMarkers.length; i++) {
       if (venueMarkers[i].name === venueName) {
         google.maps.event.trigger(venueMarkers[i].marker, 'click');
-        self.map.panTo(venueMarkers[i].position);
+        map.panTo(venueMarkers[i].position);
       }
     }
   };
@@ -103,7 +104,7 @@ function MapViewModel() {
     bounds.extend(new google.maps.LatLng(lat, lng));
     map.fitBounds(bounds);
     map.setCenter(bounds.getCenter());
-        var icon = {
+    var icon = {
       url: "img/pin.png", // url
       scaledSize: new google.maps.Size(20, 20), // scaled size
       origin: new google.maps.Point(0, 0), // origin
@@ -117,7 +118,7 @@ function MapViewModel() {
       animation: google.maps.Animation.DROP,
       icon: icon
     });
-     marker.addListener('click', toggleBounce);
+    marker.addListener('click', toggleBounce);
 
     google.maps.event.addListener(marker, 'click', function() {
       infowindow.setContent(contentWindow);
@@ -137,7 +138,7 @@ function MapViewModel() {
         marker.setAnimation(google.maps.Animation.BOUNCE);
         setTimeout(function() {
           marker.setAnimation(null);
-        }, 750);
+        }, 1400);
       }
     }
 
@@ -149,28 +150,28 @@ function MapViewModel() {
   }
 }
 
-  function initializeMap() {
-    var mapOptions = {
-      zoom: 14,
-      scrollwheel: true,
-     // disableDefaultUI: false
-    };
 
-    map = new google.maps.Map(document.querySelector('#map'), mapOptions);
-    infowindow = new google.maps.InfoWindow();
-  }
 
-  window.addEventListener('load', initializeMap);
+function handleError() {
+  alert("There is a problem loading Google Maps API. Check your reference.");
+}
 
-  window.addEventListener('resize', function(e) {
+function initializeMap() {
+  var mapOptions = {
+    maxZoom: 14,
+    scrollwheel: true,
+    disableDefaultUI: false
+  };
 
-    self.map.fitBounds(mapBounds);
-  });
-
- function handleError(){
-    alert("There is a problem loading Google Maps API. Check your reference.");
-  }
+  self.map = new google.maps.Map(document.querySelector('#map'), mapOptions);
+  self.infowindow = new google.maps.InfoWindow();
 
   ko.applyBindings(new MapViewModel());
+}
 
+window.addEventListener('load', initializeMap);
 
+window.addEventListener('resize', function(e) {
+
+  self.map.fitBounds(mapBounds);
+});
