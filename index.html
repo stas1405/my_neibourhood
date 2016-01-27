@@ -13,9 +13,9 @@
 			<input placeholder="type keyword..." class="search-area" data-bind="value: searchword, valueUpdate: 'keyup'" autocomplete="off">
 		</div>
 			<div class="locations" data-bind="click: listToggle">
-				<div id="listTitle">Favorite Locations
+				<div class="listTitle">Favorite Locations
 				</div>
-					<div data-bind = "visible: listBoolean">
+					<div data-bind = "visible: listBoolean, click: listToggle">
 					<ul class="resultList" data-bind="foreach: searchedList">
 						<li data-bind="event: { click: $root.updateList }">
 							<p id="locationName" data-bind="text: venue.name"></p>
@@ -24,7 +24,7 @@
 							<hr/>
 						</li>
 					</ul>
-					<span id="emptyList" data-bind="visible: searchedList().length == 0">No Results Found
+					<span class="emptyList" data-bind="visible: searchedList().length == 0">No Results Found
 					</span>
 				</div>
 			</div>

@@ -1,6 +1,7 @@
 'use strict';
 
-
+  var map;
+  var infowindow;
 
 var MarkerModel = function(marker, name, contact, position) {
   this.marker = marker;
@@ -11,8 +12,6 @@ var MarkerModel = function(marker, name, contact, position) {
 
 function MapViewModel() {
   var self = this;
-  self.map;
-  self.infowindow;
   var venueMarkers = [];
   self.listBoolean = ko.observable(true);
   self.searchword = ko.observable(''); //variable for user input
@@ -20,7 +19,7 @@ function MapViewModel() {
   self.searchedList = ko.observableArray(self.locationsList()); //List of locations for search 
   var foursquareBaseUrl = "https://api.foursquare.com/v2/venues/explore?ll=49.246292,-123.116226&&limit=20&section=topPicks&day=any&time=any&locale=en&oauth_token=GZVQCNRCS5141KWELGOWRD35HCOD1NM03PDRUXE4PHZEFH51&v=20160106";
 
-  self.listToggle = function() {
+  self.listToggle = function () {
     if (self.listBoolean() === true) {
       self.listBoolean(false);
     } else {
@@ -28,9 +27,27 @@ function MapViewModel() {
     }
   };
 
+  self.markerClick = function () {
+      self.listBoolean(false); 
+  };
+  self.closeclick = function(){
+      self.listBoolean(true); 
+  }
+
+    // Getting list of location from Foursquare
   $.getJSON(foursquareBaseUrl, function(data) {
     self.locationsList(data.response.groups[0].items);
+
+    //Function to sort list of location.
+    self.sortLocations = function () {
+      self.locationsList.sort(function(left, right) { 
+          return left.venue.name == right.venue.name ? 0 : (left.venue.name < right.venue.name ? -1 : 1) 
+      });
+    }
+  
     self.searchedList(self.locationsList());
+
+    //Creating markers to pop up the map
     for (var l = 0; l < self.locationsList().length; l++) {
       createMarkers(self.locationsList()[l]);
     }
@@ -66,6 +83,7 @@ function MapViewModel() {
     for (var i = 0; i < venueMarkers.length; i++) {
       if (venueMarkers[i].name === venueName) {
         google.maps.event.trigger(venueMarkers[i].marker, 'click');
+
         map.panTo(venueMarkers[i].position);
       }
     }
@@ -105,8 +123,8 @@ function MapViewModel() {
     map.fitBounds(bounds);
     map.setCenter(bounds.getCenter());
     var icon = {
-      url: "img/pin.png", // url
-      scaledSize: new google.maps.Size(20, 20), // scaled size
+      url: "img/pin1.png", // url
+      scaledSize: new google.maps.Size(30, 30), // scaled size
       origin: new google.maps.Point(0, 0), // origin
       anchor: new google.maps.Point(0, 0) // anchor
     };
@@ -121,14 +139,10 @@ function MapViewModel() {
     marker.addListener('click', toggleBounce);
 
     google.maps.event.addListener(marker, 'click', function() {
+      self.markerClick(); 
       infowindow.setContent(contentWindow);
       infowindow.open(map, this);
       map.panTo(position);
-    });
-
-    google.maps.event.addListener(infowindow, 'closeclick', function() {
-      self.displayList(); //close the infowindow and refresh the locations list
-      marker.setAnimation(null);
     });
 
     function toggleBounce() {
@@ -150,8 +164,6 @@ function MapViewModel() {
   }
 }
 
-
-
 function handleError() {
   alert("There is a problem loading Google Maps API. Check your reference.");
 }
@@ -163,15 +175,20 @@ function initializeMap() {
     disableDefaultUI: false
   };
 
-  self.map = new google.maps.Map(document.querySelector('#map'), mapOptions);
-  self.infowindow = new google.maps.InfoWindow();
+  map = new google.maps.Map(document.querySelector('#map'), mapOptions);
+  infowindow = new google.maps.InfoWindow();
 
-  ko.applyBindings(new MapViewModel());
+      google.maps.event.addListener(infowindow, 'closeclick', function() {
+        myModel.viewModel.listToggle();
+    });
 }
 
 window.addEventListener('load', initializeMap);
 
 window.addEventListener('resize', function(e) {
 
-  self.map.fitBounds(mapBounds);
+  map.fitBounds(mapBounds);
 });
+
+var myModel = { viewModel: new MapViewModel() };
+ko.applyBindings(myModel.viewModel);
