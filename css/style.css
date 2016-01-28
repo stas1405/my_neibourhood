@@ -157,6 +157,13 @@ li:hover {
         margin-left: 16px;
         top: 55px;
     }
+
+    .emptyList {
+    position: fixed;
+    top: 120px;
+    right: 45px;
+    color: #9E9E9E;
+}
 }
 
 @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation: portrait) {
@@ -205,4 +212,11 @@ li:hover {
         margin-left: 16px;
         top: 55px;
     }
+
+    .emptyList {
+    position: fixed;
+    top: 120px;
+    right: 55px;
+    color: #9E9E9E;
+}
 }

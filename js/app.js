@@ -32,7 +32,7 @@ function MapViewModel() {
   };
   self.closeclick = function(){
       self.listBoolean(true); 
-  }
+  };
 
     // Getting list of location from Foursquare
   $.getJSON(foursquareBaseUrl, function(data) {
@@ -41,10 +41,10 @@ function MapViewModel() {
     //Function to sort list of location.
     self.sortLocations = function () {
       self.locationsList.sort(function(left, right) { 
-          return left.venue.name == right.venue.name ? 0 : (left.venue.name < right.venue.name ? -1 : 1) 
+          return left.venue.name == right.venue.name ? 0 : (left.venue.name < right.venue.name ? -1 : 1);
       });
-    }
-  
+    };
+    self.sortLocations();
     self.searchedList(self.locationsList());
 
     //Creating markers to pop up the map
@@ -170,7 +170,7 @@ function handleError() {
 
 function initializeMap() {
   var mapOptions = {
-    maxZoom: 14,
+    maxZoom: 13,
     scrollwheel: true,
     disableDefaultUI: false
   };
