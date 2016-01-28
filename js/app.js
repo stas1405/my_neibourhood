@@ -48,7 +48,8 @@ function MapViewModel() {
     self.searchedList(self.locationsList());
 
     //Creating markers to pop up the map
-    for (var l = 0; l < self.locationsList().length; l++) {
+    self.locLen = self.locationsList().length;
+    for (var l = 0; l < self.locLen;  l++) {
       createMarkers(self.locationsList()[l]);
     }
   }).fail(function(jqXHR, status, error) {
@@ -65,7 +66,7 @@ function MapViewModel() {
     var searchword = self.searchword().toLowerCase();
 
     if (searchword !== "") {
-      for (var i = 0; i < self.locationsList().length; i++) {
+      for (var i = 0; i < self.locLen; i++) {
         venue = self.locationsList()[i].venue;
         if (venue.name.toLowerCase().indexOf(searchword) != -1) {
           list.push(self.locationsList()[i]);
@@ -80,7 +81,8 @@ function MapViewModel() {
 
   self.updateList = function(data) {
     var venueName = data.venue.name.toLowerCase();
-    for (var i = 0; i < venueMarkers.length; i++) {
+    var venueMarkersLen  = venueMarkers.length;
+    for (var i = 0; i < venueMarkersLen; i++) {
       if (venueMarkers[i].name === venueName) {
         google.maps.event.trigger(venueMarkers[i].marker, 'click');
 
@@ -96,7 +98,8 @@ function MapViewModel() {
 
   // filtering method for map markers
   function filteringMarkersBy(keyword) {
-    for (var i = 0; i < venueMarkers.length; i++) {
+    var venueMarkersLen = venueMarkers.length;
+    for (var i = 0; i < venueMarkersLen; i++) {
       if (venueMarkers[i].marker.map === null) {
         venueMarkers[i].marker.setMap(map);
       }
@@ -164,9 +167,6 @@ function MapViewModel() {
   }
 }
 
-function handleError() {
-  alert("There is a problem loading Google Maps API. Check your reference.");
-}
 
 function initializeMap() {
   var mapOptions = {
@@ -183,12 +183,18 @@ function initializeMap() {
     });
 }
 
+function handleError() {
+  alert("There is a problem loading Google Maps API. Check your reference.");
+}
+
 window.addEventListener('load', initializeMap);
 
 window.addEventListener('resize', function(e) {
 
   map.fitBounds(mapBounds);
 });
+
+
 
 var myModel = { viewModel: new MapViewModel() };
 ko.applyBindings(myModel.viewModel);
