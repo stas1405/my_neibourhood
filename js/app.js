@@ -35,31 +35,33 @@ var MapViewModel = function() {
   };
 
   // Getting list of location from Foursquare
-  $.getJSON(foursquareBaseUrl, function(data) {
-    self.locationsList(data.response.groups[0].items);
+  try {
+    $.getJSON(foursquareBaseUrl, function(data) {
+      self.locationsList(data.response.groups[0].items);
 
-    //Function to sort list of location.
-    self.sortLocations = function() {
-      self.locationsList.sort(function(left, right) {
-        return left.venue.name == right.venue.name ? 0 : (left.venue.name < right.venue.name ? -1 : 1);
-      });
-    };
-    self.sortLocations();
-    self.searchedList(self.locationsList());
-    self.bounds = new google.maps.LatLngBounds();
+      //Function to sort list of location.
+      self.sortLocations = function() {
+        self.locationsList.sort(function(left, right) {
+          return left.venue.name == right.venue.name ? 0 : (left.venue.name < right.venue.name ? -1 : 1);
+        });
+      };
+      self.sortLocations();
+      self.searchedList(self.locationsList());
+      self.bounds = new google.maps.LatLngBounds();
 
-    //Creating markers to pop up the map
-    self.locLen = self.locationsList().length;
-    for (var l = 0; l < self.locLen; l++) {
-      createMarkers(self.locationsList()[l]);
-    }
-    map.fitBounds(self.bounds);
-  }).fail(function(jqXHR, status, error) {
-    if (status == 'error') {
+      //Creating markers to pop up the map
+      self.locLen = self.locationsList().length;
+      for (var l = 0; l < self.locLen; l++) {
+        createMarkers(self.locationsList()[l]);
+      }
+      map.fitBounds(self.bounds);
+    }).fail(function(jqXHR, status, error) {
+
       alert("Forsquare API is not reachable. Try to refresh this page later");
-    }
-  });
-
+    });
+  } catch (e) {
+    alert(e);
+  }
   //Update list of location with button click, based on search criteria
   self.displayList = ko.computed(function() {
     var venue;
@@ -172,7 +174,7 @@ var myModel = {
 
 function initializeMap() {
   var mapOptions = {
-    zoom:19,
+    zoom: 19,
     scrollwheel: true,
     disableDefaultUI: false
   };
@@ -193,7 +195,7 @@ var googleSuccess = function() {
 
 window.addEventListener('resize', function(e) {
 
-  map.fitBounds(self.bounds);
+  map.fitBounds(myModel.viewModel.bounds);
 });
 
 function handleError() {
