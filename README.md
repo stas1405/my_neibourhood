@@ -1,5 +1,4 @@
-# my_neibourhood_project5
-This is a project 5 in Udacity for Front End Web Developer nanodegree course.
+# my_neibourhood
 
 This is a single-page application featuring a map of restaurants and bistro bars in Vancouver, BC Canada. 
 Application works with Foursquare and Google Map API.
